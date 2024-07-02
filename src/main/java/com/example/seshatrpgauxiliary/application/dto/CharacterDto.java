@@ -2,6 +2,7 @@ package com.example.seshatrpgauxiliary.application.dto;
 
 import com.example.seshatrpgauxiliary.infrastructure.persistence.entity.Attributes;
 import com.example.seshatrpgauxiliary.infrastructure.persistence.entity.Inventory;
+import com.example.seshatrpgauxiliary.infrastructure.persistence.entity.Skill;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,8 @@ public class CharacterDto {
     private Attributes attributes;
 
     private List<Inventory> inventory;
+
+    private List<Skill> skill;
 
     private Long userId;
 

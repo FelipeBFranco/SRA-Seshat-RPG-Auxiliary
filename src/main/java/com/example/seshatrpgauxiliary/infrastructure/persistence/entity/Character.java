@@ -19,6 +19,7 @@ import java.util.List;
 public class Character {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -37,6 +38,16 @@ public class Character {
     )
     @JsonManagedReference
     private List<Inventory> inventory;
+
+    @OneToMany
+    @JoinTable(
+            name = "character_skill",
+            schema = "seshat",
+            joinColumns = @JoinColumn(name = "character_id"),
+            inverseJoinColumns = @JoinColumn(name = "skill_id")
+    )
+    @JsonManagedReference
+    private List<Skill> skill;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

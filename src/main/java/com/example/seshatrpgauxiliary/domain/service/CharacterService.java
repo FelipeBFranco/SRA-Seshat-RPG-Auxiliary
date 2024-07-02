@@ -30,6 +30,7 @@ public class CharacterService {
                         character.getImage(),
                         character.getAttributes(),
                         character.getInventory(),
+                        character.getSkill(),
                         character.getUser().getId(),
                         character.getUser().getName(),
                         character.getRace(),
