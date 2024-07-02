@@ -1,6 +1,7 @@
 package com.example.seshatrpgauxiliary.infrastructure.persistence.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +28,8 @@ public class Inventory {
         private String Energy;
 
         @ManyToOne
-        @JoinColumn(name = "user_id")
-        private User user;
+        @JoinColumn(name = "character_id")
+        @JsonBackReference
+        private Character character;
 
 }
