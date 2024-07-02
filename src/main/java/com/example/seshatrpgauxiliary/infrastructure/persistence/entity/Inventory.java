@@ -17,6 +17,7 @@ import lombok.Setter;
 public class Inventory {
 
         @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
         private String name;
@@ -28,7 +29,12 @@ public class Inventory {
         private String Energy;
 
         @ManyToOne
-        @JoinColumn(name = "character_id")
+        @JoinTable(
+                name = "character_inventory",
+                schema = "seshat",
+                joinColumns = @JoinColumn(name = "inventory_id"),
+                inverseJoinColumns = @JoinColumn(name = "character_id")
+        )
         @JsonBackReference
         private Character character;
 
