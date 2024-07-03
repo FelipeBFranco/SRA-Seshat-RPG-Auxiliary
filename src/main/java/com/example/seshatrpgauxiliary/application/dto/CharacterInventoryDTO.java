@@ -1,8 +1,6 @@
 package com.example.seshatrpgauxiliary.application.dto;
 
-import com.example.seshatrpgauxiliary.infrastructure.persistence.entity.Attributes;
 import com.example.seshatrpgauxiliary.infrastructure.persistence.entity.Inventory;
-import com.example.seshatrpgauxiliary.infrastructure.persistence.entity.Skill;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,25 +12,11 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CharacterDto {
+public class CharacterInventoryDTO {
 
     private Long id;
 
     private String name;
 
-    private byte[] image;
-
-    private Attributes attributes;
-
     private List<Inventory> inventory;
-
-    private List<Skill> skill;
-
-    private Long userId;
-
-    private String userName;
-
-    private String race;
-
-    private String classType;
 }

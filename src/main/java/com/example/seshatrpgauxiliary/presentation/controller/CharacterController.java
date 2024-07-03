@@ -1,5 +1,7 @@
 package com.example.seshatrpgauxiliary.presentation.controller;
-import com.example.seshatrpgauxiliary.application.dto.CharacterDto;
+import com.example.seshatrpgauxiliary.application.dto.CharacterDTO;
+import com.example.seshatrpgauxiliary.application.dto.CharacterInventoryDTO;
+import com.example.seshatrpgauxiliary.application.dto.CharacterSkillDTO;
 import com.example.seshatrpgauxiliary.domain.service.CharacterService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +18,17 @@ public class CharacterController {
     }
 
     @GetMapping("/{userId}")
-    public List<CharacterDto> getCharactersByUserId(@PathVariable Long userId) {
+    public List<CharacterDTO> getCharactersByUserId(@PathVariable Long userId) {
         return characterService.getCharactersByUserId(userId);
+    }
+
+    @GetMapping("/inventory/{userId}")
+    public List<CharacterInventoryDTO> getCharactersInventoryByUserId(@PathVariable Long userId) {
+        return characterService.getCharactersInventoryByUserId(userId);
+    }
+
+    @GetMapping("/skills/{userId}")
+    public List<CharacterSkillDTO> getCharactersSkillsByUserId (@PathVariable Long userId) {
+        return characterService.getCharactersSkillsByUserId(userId);
     }
 }

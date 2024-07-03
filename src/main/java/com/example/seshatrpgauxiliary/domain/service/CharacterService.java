@@ -1,7 +1,9 @@
 package com.example.seshatrpgauxiliary.domain.service;
 
+import com.example.seshatrpgauxiliary.application.dto.CharacterDTO;
+import com.example.seshatrpgauxiliary.application.dto.CharacterInventoryDTO;
+import com.example.seshatrpgauxiliary.application.dto.CharacterSkillDTO;
 import com.example.seshatrpgauxiliary.infrastructure.persistence.entity.Character;
-import com.example.seshatrpgauxiliary.application.dto.CharacterDto;
 import com.example.seshatrpgauxiliary.infrastructure.persistence.repository.CharacterRepository;
 import com.example.seshatrpgauxiliary.infrastructure.persistence.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -21,21 +23,43 @@ public class CharacterService {
         this.characterRepository = characterRepository;
         this.userRepository = userRepository;
     }
-    public List<CharacterDto> getCharactersByUserId(Long userId) {
+    public List<CharacterDTO> getCharactersByUserId(Long userId) {
         List<Character> characters = characterRepository.findByUserId(userId);
         return characters.stream()
-                .map(character -> new CharacterDto(
+                .map(character -> new CharacterDTO(
                         character.getId(),
                         character.getName(),
                         character.getImage(),
                         character.getAttributes(),
-                        character.getInventory(),
-                        character.getSkill(),
                         character.getUser().getId(),
                         character.getUser().getName(),
                         character.getRace(),
                         character.getClassType()))
                 .collect(Collectors.toList());
     }
+
+    public List<CharacterInventoryDTO> getCharactersInventoryByUserId(Long userId) {
+        List<Character> characters = characterRepository.findByUserId(userId);
+        return characters.stream()
+                .map(character -> new CharacterInventoryDTO(
+                        character.getId(),
+                        character.getName(),
+                        character.getInventory()
+                        ))
+                .collect(Collectors.toList());
+    }
+
+    public List<CharacterSkillDTO> getCharactersSkillsByUserId(Long userId) {
+        List<Character> characters = characterRepository.findByUserId(userId);
+        return characters.stream()
+                .map(character -> new CharacterSkillDTO(
+                        character.getId(),
+                        character.getName(),
+                        character.getSkill()
+                ))
+                .collect(Collectors.toList());
+    }
+
+
 
 }
