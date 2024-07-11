@@ -32,4 +32,17 @@ public class Attributes {
         private Integer dodge;
         private Integer determination;
 
+        @Column(name = "health_max")
+        private Integer healthMax;
+
+        @Column(name = "mana_max")
+        private Integer manaMax;
+
+        @Column(name = "stamina_max")
+        private Integer staminaMax;
+
+        @Column(name = "amalgama_max")
+        private Integer amalgamaMax;
+
+
 }
