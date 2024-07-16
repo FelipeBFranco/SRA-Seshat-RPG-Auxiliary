@@ -3,10 +3,15 @@ package com.example.seshatrpgauxiliary.domain.service;
 import com.example.seshatrpgauxiliary.application.dto.CharacterDTO;
 import com.example.seshatrpgauxiliary.application.dto.CharacterInventoryDTO;
 import com.example.seshatrpgauxiliary.application.dto.CharacterSkillDTO;
+import com.example.seshatrpgauxiliary.infrastructure.persistence.entity.Attributes;
 import com.example.seshatrpgauxiliary.infrastructure.persistence.entity.Character;
+import com.example.seshatrpgauxiliary.infrastructure.persistence.repository.AttributesRepository;
 import com.example.seshatrpgauxiliary.infrastructure.persistence.repository.CharacterRepository;
 import com.example.seshatrpgauxiliary.infrastructure.persistence.repository.UserRepository;
+import com.example.seshatrpgauxiliary.presentation.request.CharacterCreationRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.stream.Collectors;
@@ -18,10 +23,13 @@ public class CharacterService {
 
     private final UserRepository userRepository;
 
+    private final AttributesRepository attributesRepository;
 
-    public CharacterService(CharacterRepository characterRepository, UserRepository userRepository) {
+
+    public CharacterService(CharacterRepository characterRepository, UserRepository userRepository, AttributesRepository attributesRepository) {
         this.characterRepository = characterRepository;
         this.userRepository = userRepository;
+        this.attributesRepository = attributesRepository;
     }
     public List<CharacterDTO> getCharactersByUserId(Long userId) {
         List<Character> characters = characterRepository.findByUserId(userId);
@@ -58,6 +66,34 @@ public class CharacterService {
                         character.getSkill()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    public CharacterDTO createCharacter(CharacterCreationRequest request) {
+        // Cria uma nova instância de Attributes com os dados do request
+        Attributes attributes = new Attributes(null, request.getLevel(), 0, // Supondo que experience comece do zero
+                request.getHealth(), request.getStamina(), 0, // Mana e Amalgama iniciam como 0 para simplificar
+                0, 0, // StaminaMax e AmalgamaMax não especificados no request
+                request.getStrength(), request.getAgility(), request.getIntelligence(),
+                request.getMind(), request.getBlock(), request.getDodge(),
+                request.getDetermination(), request.getHealth(), // HealthMax igual ao Health inicial
+                0, // ManaMax não especificado no request
+                request.getStamina()); // StaminaMax igual ao Stamina inicial
+        // Salva os atributos no banco de dados
+        attributes = attributesRepository.save(attributes);
+
+        // Cria uma nova instância de Character com os dados do request e os Attributes salvos
+        Character character = new Character(null, request.getName(), request.getImage(), attributes, new ArrayList<>(), // Inventory vazio inicialmente
+                new ArrayList<>(), // Skills vazio inicialmente
+                userRepository.findById(request.getUserId()).orElse(null), // Busca o User pelo ID
+                request.getRace(), request.getClassType());
+
+        // Salva o personagem no banco de dados
+        character = characterRepository.save(character);
+
+        // Converte o Character salvo para DTO e retorna
+        return new CharacterDTO(character.getId(), character.getName(), character.getImage(),
+                character.getAttributes(), character.getUser().getId(), character.getUser().getName(),
+                character.getRace(), character.getClassType());
     }
 
 
