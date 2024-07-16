@@ -24,7 +24,7 @@ public class Character {
 
     private String name;
 
-    private byte[] image;
+    private String image;
 
     @OneToOne
     private Attributes attributes;

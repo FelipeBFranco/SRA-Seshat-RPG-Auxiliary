@@ -16,7 +16,7 @@ public class CharacterDTO {
 
     private String name;
 
-    private byte[] image;
+    private String image;
 
     private Attributes attributes;
 
