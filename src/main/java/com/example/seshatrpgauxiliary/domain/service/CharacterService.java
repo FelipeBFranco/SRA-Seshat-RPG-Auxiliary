@@ -42,7 +42,8 @@ public class CharacterService {
                         character.getUser().getId(),
                         character.getUser().getName(),
                         character.getRace(),
-                        character.getClassType()))
+                        character.getClassType(),
+                        character.getCampaign()))
                 .collect(Collectors.toList());
     }
 
@@ -85,7 +86,7 @@ public class CharacterService {
         Character character = new Character(null, request.getName(), request.getImage(), attributes, new ArrayList<>(), // Inventory vazio inicialmente
                 new ArrayList<>(), // Skills vazio inicialmente
                 userRepository.findById(request.getUserId()).orElse(null), // Busca o User pelo ID
-                request.getRace(), request.getClassType());
+                request.getRace(), request.getClassType(), request.getCampaign());
 
         // Salva o personagem no banco de dados
         character = characterRepository.save(character);
@@ -93,7 +94,7 @@ public class CharacterService {
         // Converte o Character salvo para DTO e retorna
         return new CharacterDTO(character.getId(), character.getName(), character.getImage(),
                 character.getAttributes(), character.getUser().getId(), character.getUser().getName(),
-                character.getRace(), character.getClassType());
+                character.getRace(), character.getClassType(), character.getCampaign());
     }
 
 

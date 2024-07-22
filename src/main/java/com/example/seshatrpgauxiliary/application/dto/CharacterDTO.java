@@ -27,4 +27,6 @@ public class CharacterDTO {
     private String race;
 
     private String classType;
+
+    private String campaign;
 }

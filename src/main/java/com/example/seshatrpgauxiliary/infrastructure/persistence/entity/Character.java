@@ -57,4 +57,6 @@ public class Character {
 
     @Column(name = "class")
     private String classType;
+
+    private String campaign;
 }

@@ -26,4 +26,5 @@ public class CharacterCreationRequest {
         private Integer dodge;
         private Integer determination;
         private String image;
+        private String campaign;
 }
