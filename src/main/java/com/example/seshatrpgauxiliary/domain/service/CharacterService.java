@@ -9,6 +9,7 @@ import com.example.seshatrpgauxiliary.infrastructure.persistence.repository.Attr
 import com.example.seshatrpgauxiliary.infrastructure.persistence.repository.CharacterRepository;
 import com.example.seshatrpgauxiliary.infrastructure.persistence.repository.UserRepository;
 import com.example.seshatrpgauxiliary.presentation.request.CharacterCreationRequest;
+import com.example.seshatrpgauxiliary.presentation.request.CharacterUpdateRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -92,6 +93,32 @@ public class CharacterService {
         character = characterRepository.save(character);
 
         // Converte o Character salvo para DTO e retorna
+        return new CharacterDTO(character.getId(), character.getName(), character.getImage(),
+                character.getAttributes(), character.getUser().getId(), character.getUser().getName(),
+                character.getRace(), character.getClassType(), character.getCampaign());
+    }
+
+    public CharacterDTO updateCharacter(Long characterId, CharacterUpdateRequest request) {
+        Character character = characterRepository.findById(characterId)
+                .orElseThrow(() -> new RuntimeException("Character not found"));
+
+        if (request.getName() != null) character.setName(request.getName());
+        if (request.getLevel() != null) character.getAttributes().setLevel(request.getLevel());
+        if (request.getHealth() != null) character.getAttributes().setHealth(request.getHealth());
+        if (request.getStamina() != null) character.getAttributes().setStamina(request.getStamina());
+        if (request.getStrength() != null) character.getAttributes().setStrength(request.getStrength());
+        if (request.getAgility() != null) character.getAttributes().setAgility(request.getAgility());
+        if (request.getIntelligence() != null) character.getAttributes().setIntelligence(request.getIntelligence());
+        if (request.getMind() != null) character.getAttributes().setMind(request.getMind());
+        if (request.getBlock() != null) character.getAttributes().setBlock(request.getBlock());
+        if (request.getDodge() != null) character.getAttributes().setDodge(request.getDodge());
+        if (request.getDetermination() != null) character.getAttributes().setDetermination(request.getDetermination());
+        if (request.getRace() != null) character.setRace(request.getRace());
+        if (request.getClassType() != null) character.setClassType(request.getClassType());
+        if (request.getCampaign() != null) character.setCampaign(request.getCampaign());
+
+        character = characterRepository.save(character);
+
         return new CharacterDTO(character.getId(), character.getName(), character.getImage(),
                 character.getAttributes(), character.getUser().getId(), character.getUser().getName(),
                 character.getRace(), character.getClassType(), character.getCampaign());

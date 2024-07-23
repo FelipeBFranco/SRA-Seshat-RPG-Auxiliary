@@ -4,6 +4,7 @@ import com.example.seshatrpgauxiliary.application.dto.CharacterInventoryDTO;
 import com.example.seshatrpgauxiliary.application.dto.CharacterSkillDTO;
 import com.example.seshatrpgauxiliary.domain.service.CharacterService;
 import com.example.seshatrpgauxiliary.presentation.request.CharacterCreationRequest;
+import com.example.seshatrpgauxiliary.presentation.request.CharacterUpdateRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,5 +40,11 @@ public class CharacterController {
     public ResponseEntity<CharacterDTO> createCharacter(@RequestBody CharacterCreationRequest request) {
         CharacterDTO createdCharacter = characterService.createCharacter(request);
         return new ResponseEntity<>(createdCharacter , HttpStatus.OK);
+    }
+
+    @PutMapping("/update/{characterId}")
+    public ResponseEntity<CharacterDTO> updateCharacter(@PathVariable Long characterId, @RequestBody CharacterUpdateRequest request) {
+        CharacterDTO updatedCharacter = characterService.updateCharacter(characterId, request);
+        return ResponseEntity.ok(updatedCharacter);
     }
 }
