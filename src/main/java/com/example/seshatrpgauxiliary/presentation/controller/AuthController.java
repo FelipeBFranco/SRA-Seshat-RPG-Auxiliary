@@ -8,6 +8,7 @@ import com.example.seshatrpgauxiliary.infrastructure.persistence.repository.User
 import com.example.seshatrpgauxiliary.infrastructure.security.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,19 +38,23 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody RegisterRequestDTO body){
+    public ResponseEntity register(@RequestBody RegisterRequestDTO body) {
         Optional<User> user = this.repository.findByEmail(body.email());
 
-        if(user.isEmpty()) {
+        if (user.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuario já cadastrado!");
+        }
+
+        try {
             User newUser = new User();
             newUser.setPassword(passwordEncoder.encode(body.password()));
             newUser.setEmail(body.email());
             newUser.setName(body.name());
             this.repository.save(newUser);
 
-            String token = this.tokenService.generateToken(newUser);
-            return ResponseEntity.ok(new ResponseDTO(newUser.getId(), newUser.getName(), token));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar usuário!");
         }
-        return ResponseEntity.badRequest().build();
     }
 }

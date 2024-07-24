@@ -33,7 +33,9 @@ public class CharacterService {
         this.attributesRepository = attributesRepository;
     }
     public List<CharacterDTO> getCharactersByUserId(Long userId) {
+
         List<Character> characters = characterRepository.findByUserId(userId);
+        System.out.println(userId);
         return characters.stream()
                 .map(character -> new CharacterDTO(
                         character.getId(),
@@ -46,6 +48,7 @@ public class CharacterService {
                         character.getClassType(),
                         character.getCampaign()))
                 .collect(Collectors.toList());
+
     }
 
     public List<CharacterInventoryDTO> getCharactersInventoryByUserId(Long userId) {
