@@ -98,7 +98,7 @@ public class CharacterService {
                 character.getRace(), character.getClassType(), character.getCampaign());
     }
 
-    public CharacterDTO updateCharacter(Long characterId, CharacterUpdateRequest request) {
+    public CharacterUpdateRequest updateCharacter(Long characterId, CharacterUpdateRequest request) {
         Character character = characterRepository.findById(characterId)
                 .orElseThrow(() -> new RuntimeException("Character not found"));
 
@@ -116,12 +116,21 @@ public class CharacterService {
         if (request.getRace() != null) character.setRace(request.getRace());
         if (request.getClassType() != null) character.setClassType(request.getClassType());
         if (request.getCampaign() != null) character.setCampaign(request.getCampaign());
+        if (request.getExperience() != null) character.getAttributes().setExperience(request.getExperience());
+        if (request.getStaminaMax() != null) character.getAttributes().setStaminaMax(request.getStaminaMax());
+        if (request.getHealthMax() != null) character.getAttributes().setHealthMax(request.getHealthMax());
+        if (request.getAmalgamaMax() != null) character.getAttributes().setAmalgamaMax(request.getAmalgamaMax());
+        if (request.getManaMax() != null) character.getAttributes().setManaMax(request.getManaMax());
 
         character = characterRepository.save(character);
 
-        return new CharacterDTO(character.getId(), character.getName(), character.getImage(),
-                character.getAttributes(), character.getUser().getId(), character.getUser().getName(),
-                character.getRace(), character.getClassType(), character.getCampaign());
+        return new CharacterUpdateRequest(character.getId(), character.getName(), character.getRace(), character.getClassType(),
+                character.getAttributes().getLevel(), character.getAttributes().getHealth(), character.getAttributes().getStamina(),
+                character.getAttributes().getStrength(), character.getAttributes().getAgility(), character.getAttributes().getIntelligence(),
+                character.getAttributes().getMind(), character.getAttributes().getBlock(), character.getAttributes().getDodge(),
+                character.getAttributes().getDetermination(), character.getCampaign(), character.getAttributes().getExperience(),
+                character.getAttributes().getStaminaMax(), character.getAttributes().getHealthMax(), character.getAttributes().getAmalgamaMax(),
+                character.getAttributes().getManaMax());
     }
 
 

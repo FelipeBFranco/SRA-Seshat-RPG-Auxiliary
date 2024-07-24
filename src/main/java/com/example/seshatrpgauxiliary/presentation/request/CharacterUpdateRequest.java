@@ -28,5 +28,10 @@ public class CharacterUpdateRequest {
     private Integer dodge;
     private Integer determination;
     private String campaign;
+    private Integer experience;
+    private Integer staminaMax;
+    private Integer healthMax;
+    private Integer amalgamaMax;
+    private Integer manaMax;
 
 }
