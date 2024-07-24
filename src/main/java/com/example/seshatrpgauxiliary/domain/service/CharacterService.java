@@ -121,16 +121,22 @@ public class CharacterService {
         if (request.getHealthMax() != null) character.getAttributes().setHealthMax(request.getHealthMax());
         if (request.getAmalgamaMax() != null) character.getAttributes().setAmalgamaMax(request.getAmalgamaMax());
         if (request.getManaMax() != null) character.getAttributes().setManaMax(request.getManaMax());
+        if (request.getAmalgama() != null) character.getAttributes().setAmalgama(request.getAmalgama());
+        if (request.getMana() != null) character.getAttributes().setMana(request.getMana());
+
 
         character = characterRepository.save(character);
 
-        return new CharacterUpdateRequest(character.getId(), character.getName(), character.getRace(), character.getClassType(),
-                character.getAttributes().getLevel(), character.getAttributes().getHealth(), character.getAttributes().getStamina(),
-                character.getAttributes().getStrength(), character.getAttributes().getAgility(), character.getAttributes().getIntelligence(),
-                character.getAttributes().getMind(), character.getAttributes().getBlock(), character.getAttributes().getDodge(),
-                character.getAttributes().getDetermination(), character.getCampaign(), character.getAttributes().getExperience(),
-                character.getAttributes().getStaminaMax(), character.getAttributes().getHealthMax(), character.getAttributes().getAmalgamaMax(),
-                character.getAttributes().getManaMax());
+        return new CharacterUpdateRequest(character.getUser().getId(), character.getName(), character.getRace(),
+                character.getClassType(), character.getAttributes().getLevel(), character.getAttributes().getHealth(),
+                character.getAttributes().getStamina(), character.getAttributes().getAmalgama(),
+                character.getAttributes().getMana(), character.getAttributes().getStrength(),
+                character.getAttributes().getAgility(), character.getAttributes().getIntelligence(),
+                character.getAttributes().getMind(), character.getAttributes().getBlock(),
+                character.getAttributes().getDodge(), character.getAttributes().getDetermination(),
+                character.getCampaign(), character.getAttributes().getExperience(),
+                character.getAttributes().getStaminaMax(), character.getAttributes().getHealthMax(),
+                character.getAttributes().getAmalgamaMax(), character.getAttributes().getManaMax());
     }
 
 

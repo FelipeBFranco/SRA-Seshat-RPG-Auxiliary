@@ -20,6 +20,8 @@ public class CharacterUpdateRequest {
     private Integer level;
     private Integer health;
     private Integer stamina;
+    private Integer amalgama;
+    private Integer mana;
     private Integer strength;
     private Integer agility;
     private Integer intelligence;
