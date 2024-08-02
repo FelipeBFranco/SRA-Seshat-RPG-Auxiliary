@@ -11,4 +11,5 @@ import java.util.Optional;
 @Repository
 public interface CharacterRepository extends JpaRepository<Character, Long> {
     List<Character> findByUserId(Long userId);
+    Optional<Character> findById (Long id);
 }

@@ -47,4 +47,10 @@ public class CharacterController {
         CharacterUpdateRequest updatedCharacter = characterService.updateCharacter(characterId, request);
         return ResponseEntity.ok(updatedCharacter);
     }
+
+    @DeleteMapping("/delete/{characterId}")
+    public ResponseEntity<Void> deleteCharacter(@PathVariable Long characterId) {
+        characterService.deleteCharacter(characterId);
+        return ResponseEntity.noContent().build();
+    }
 }

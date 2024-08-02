@@ -103,7 +103,7 @@ public class CharacterService {
 
     public CharacterUpdateRequest updateCharacter(Long characterId, CharacterUpdateRequest request) {
         Character character = characterRepository.findById(characterId)
-                .orElseThrow(() -> new RuntimeException("Character not found"));
+                .orElseThrow(() -> new RuntimeException("Character not found."));
 
         if (request.getName() != null) character.setName(request.getName());
         if (request.getLevel() != null) character.getAttributes().setLevel(request.getLevel());
@@ -127,7 +127,6 @@ public class CharacterService {
         if (request.getAmalgama() != null) character.getAttributes().setAmalgama(request.getAmalgama());
         if (request.getMana() != null) character.getAttributes().setMana(request.getMana());
 
-
         character = characterRepository.save(character);
 
         return new CharacterUpdateRequest(character.getUser().getId(), character.getName(), character.getRace(),
@@ -142,6 +141,11 @@ public class CharacterService {
                 character.getAttributes().getAmalgamaMax(), character.getAttributes().getManaMax());
     }
 
-
+    public void deleteCharacter(Long characterId) {
+        Character character = characterRepository.findById(characterId)
+                .orElseThrow(() -> new RuntimeException("Character not found."));
+        characterRepository.delete(character);
+    }
 
 }
+
