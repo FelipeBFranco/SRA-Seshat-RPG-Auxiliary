@@ -1,13 +1,11 @@
 package com.example.seshatrpgauxiliary.domain.service;
 
-import com.example.seshatrpgauxiliary.application.dto.CharacterDTO;
-import com.example.seshatrpgauxiliary.application.dto.CharacterInventoryDTO;
-import com.example.seshatrpgauxiliary.application.dto.CharacterSkillDTO;
+import com.example.seshatrpgauxiliary.application.dto.*;
 import com.example.seshatrpgauxiliary.infrastructure.persistence.entity.Attributes;
 import com.example.seshatrpgauxiliary.infrastructure.persistence.entity.Character;
-import com.example.seshatrpgauxiliary.infrastructure.persistence.repository.AttributesRepository;
-import com.example.seshatrpgauxiliary.infrastructure.persistence.repository.CharacterRepository;
-import com.example.seshatrpgauxiliary.infrastructure.persistence.repository.UserRepository;
+import com.example.seshatrpgauxiliary.infrastructure.persistence.entity.Inventory;
+import com.example.seshatrpgauxiliary.infrastructure.persistence.entity.Skill;
+import com.example.seshatrpgauxiliary.infrastructure.persistence.repository.*;
 import com.example.seshatrpgauxiliary.presentation.request.CharacterCreationRequest;
 import com.example.seshatrpgauxiliary.presentation.request.CharacterUpdateRequest;
 import org.springframework.stereotype.Service;
@@ -26,11 +24,17 @@ public class CharacterService {
 
     private final AttributesRepository attributesRepository;
 
+    private final InventoryRepository inventoryRepository;
 
-    public CharacterService(CharacterRepository characterRepository, UserRepository userRepository, AttributesRepository attributesRepository) {
+    private final SkillRepository skillRepository;
+
+
+    public CharacterService(CharacterRepository characterRepository, UserRepository userRepository, AttributesRepository attributesRepository, InventoryRepository inventoryRepository, SkillRepository skillRepository) {
         this.characterRepository = characterRepository;
         this.userRepository = userRepository;
         this.attributesRepository = attributesRepository;
+        this.inventoryRepository = inventoryRepository;
+        this.skillRepository = skillRepository;
     }
     public List<CharacterDTO> getCharactersByUserId(Long userId) {
 
@@ -49,28 +53,6 @@ public class CharacterService {
                         character.getCampaign()))
                 .collect(Collectors.toList());
 
-    }
-
-    public List<CharacterInventoryDTO> getCharactersInventoryByUserId(Long userId) {
-        List<Character> characters = characterRepository.findByUserId(userId);
-        return characters.stream()
-                .map(character -> new CharacterInventoryDTO(
-                        character.getId(),
-                        character.getName(),
-                        character.getInventory()
-                        ))
-                .collect(Collectors.toList());
-    }
-
-    public List<CharacterSkillDTO> getCharactersSkillsByUserId(Long userId) {
-        List<Character> characters = characterRepository.findByUserId(userId);
-        return characters.stream()
-                .map(character -> new CharacterSkillDTO(
-                        character.getId(),
-                        character.getName(),
-                        character.getSkill()
-                ))
-                .collect(Collectors.toList());
     }
 
     public CharacterDTO createCharacter(CharacterCreationRequest request) {
@@ -145,6 +127,106 @@ public class CharacterService {
         Character character = characterRepository.findById(characterId)
                 .orElseThrow(() -> new RuntimeException("Character not found."));
         characterRepository.delete(character);
+    }
+
+
+    public List<InventoryDTO> getInventoriesByCharacterId(Long characterId) {
+        return inventoryRepository.findByCharacterId(characterId).stream()
+                .map(inventory -> new InventoryDTO(
+                        inventory.getId(),
+                        inventory.getName(),
+                        inventory.getQuantity(),
+                        inventory.getDescription(),
+                        inventory.getEnergy(),
+                        inventory.getCharacter().getId()))
+                .collect(Collectors.toList());
+    }
+
+    public InventoryDTO createInventory(Long characterId, InventoryDTO inventoryDTO) {
+        Inventory inventory = new Inventory();
+        inventory.setName(inventoryDTO.getName());
+        inventory.setQuantity(inventoryDTO.getQuantity());
+        inventory.setDescription(inventoryDTO.getDescription());
+        inventory.setEnergy(inventoryDTO.getEnergy());
+        inventory.setCharacter(characterRepository.findById(characterId).orElseThrow(() -> new RuntimeException("Character not found.")));
+        Inventory savedInventory = inventoryRepository.save(inventory);
+        return new InventoryDTO(
+                savedInventory.getId(),
+                savedInventory.getName(),
+                savedInventory.getQuantity(),
+                savedInventory.getDescription(),
+                savedInventory.getEnergy(),
+                savedInventory.getCharacter().getId());
+    }
+
+    public InventoryDTO updateInventory(Long inventoryId, InventoryDTO inventoryDTO) {
+        Inventory inventory = inventoryRepository.findById(inventoryId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found."));
+        inventory.setName(inventoryDTO.getName());
+        inventory.setQuantity(inventoryDTO.getQuantity());
+        inventory.setDescription(inventoryDTO.getDescription());
+        inventory.setEnergy(inventoryDTO.getEnergy());
+        Inventory updatedInventory = inventoryRepository.save(inventory);
+        return new InventoryDTO(
+                updatedInventory.getId(),
+                updatedInventory.getName(),
+                updatedInventory.getQuantity(),
+                updatedInventory.getDescription(),
+                updatedInventory.getEnergy(),
+                updatedInventory.getCharacter().getId());
+    }
+
+    public void deleteInventory(Long inventoryId) {
+        Inventory inventory = inventoryRepository.findById(inventoryId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found."));
+        inventoryRepository.delete(inventory);
+    }
+
+    public List<SkillDTO> getSkillsByCharacterId(Long characterId) {
+        return skillRepository.findByCharacterId(characterId).stream()
+                .map(skill -> new SkillDTO(
+                        skill.getId(),
+                        skill.getName(),
+                        skill.getDescription(),
+                        skill.getEnergy(),
+                        skill.getCharacter().getId()))
+                .collect(Collectors.toList());
+    }
+
+    public SkillDTO createSkill(Long characterId, SkillDTO skillDTO) {
+        Skill skill = new Skill();
+        skill.setName(skillDTO.getName());
+        skill.setDescription(skillDTO.getDescription());
+        skill.setEnergy(skillDTO.getEnergy());
+        skill.setCharacter(characterRepository.findById(characterId).orElseThrow(() -> new RuntimeException("Character not found.")));
+        Skill savedSkill = skillRepository.save(skill);
+        return new SkillDTO(
+                savedSkill.getId(),
+                savedSkill.getName(),
+                savedSkill.getDescription(),
+                savedSkill.getEnergy(),
+                savedSkill.getCharacter().getId());
+    }
+
+    public SkillDTO updateSkill(Long skillId, SkillDTO skillDTO) {
+        Skill skill = skillRepository.findById(skillId)
+                .orElseThrow(() -> new RuntimeException("Skill not found."));
+        skill.setName(skillDTO.getName());
+        skill.setDescription(skillDTO.getDescription());
+        skill.setEnergy(skillDTO.getEnergy());
+        Skill updatedSkill = skillRepository.save(skill);
+        return new SkillDTO(
+                updatedSkill.getId(),
+                updatedSkill.getName(),
+                updatedSkill.getDescription(),
+                updatedSkill.getEnergy(),
+                updatedSkill.getCharacter().getId());
+    }
+
+    public void deleteSkill(Long skillId) {
+        Skill skill = skillRepository.findById(skillId)
+                .orElseThrow(() -> new RuntimeException("Skill not found."));
+        skillRepository.delete(skill);
     }
 
 }
