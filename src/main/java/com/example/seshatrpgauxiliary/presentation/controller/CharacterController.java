@@ -26,15 +26,15 @@ public class CharacterController {
         return characterService.getCharactersByUserId(userId);
     }
 
-    @GetMapping("/inventory/{userId}")
-    public List<CharacterInventoryDTO> getCharactersInventoryByUserId(@PathVariable Long userId) {
-        return characterService.getCharactersInventoryByUserId(userId);
-    }
-
-    @GetMapping("/skills/{userId}")
-    public List<CharacterSkillDTO> getCharactersSkillsByUserId (@PathVariable Long userId) {
-        return characterService.getCharactersSkillsByUserId(userId);
-    }
+//    @GetMapping("/inventory/{userId}")
+//    public List<CharacterInventoryDTO> getCharactersInventoryByUserId(@PathVariable Long userId) {
+//        return characterService.getCharactersInventoryByUserId(userId);
+//    }
+//
+//    @GetMapping("/skills/{userId}")
+//    public List<CharacterSkillDTO> getCharactersSkillsByUserId (@PathVariable Long userId) {
+//        return characterService.getCharactersSkillsByUserId(userId);
+//    }
 
     @PostMapping("/create")
     public ResponseEntity<CharacterDTO> createCharacter(@RequestBody CharacterCreationRequest request) {
