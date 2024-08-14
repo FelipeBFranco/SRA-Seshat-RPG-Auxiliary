@@ -8,6 +8,7 @@ import com.example.seshatrpgauxiliary.infrastructure.persistence.entity.Skill;
 import com.example.seshatrpgauxiliary.infrastructure.persistence.repository.*;
 import com.example.seshatrpgauxiliary.presentation.request.CharacterCreationRequest;
 import com.example.seshatrpgauxiliary.presentation.request.CharacterUpdateRequest;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,6 +37,8 @@ public class CharacterService {
         this.inventoryRepository = inventoryRepository;
         this.skillRepository = skillRepository;
     }
+
+    @Transactional
     public List<CharacterDTO> getCharactersByUserId(Long userId) {
 
         List<Character> characters = characterRepository.findByUserId(userId);
@@ -55,6 +58,7 @@ public class CharacterService {
 
     }
 
+    @Transactional
     public CharacterDTO createCharacter(CharacterCreationRequest request) {
         // Cria uma nova instância de Attributes com os dados do request
         Attributes attributes = new Attributes(null, request.getLevel(), 0, // Supondo que experience comece do zero
@@ -83,6 +87,7 @@ public class CharacterService {
                 character.getRace(), character.getClassType(), character.getCampaign());
     }
 
+    @Transactional
     public CharacterUpdateRequest updateCharacter(Long characterId, CharacterUpdateRequest request) {
         Character character = characterRepository.findById(characterId)
                 .orElseThrow(() -> new RuntimeException("Character not found."));
@@ -123,13 +128,14 @@ public class CharacterService {
                 character.getAttributes().getAmalgamaMax(), character.getAttributes().getManaMax());
     }
 
+    @Transactional
     public void deleteCharacter(Long characterId) {
         Character character = characterRepository.findById(characterId)
                 .orElseThrow(() -> new RuntimeException("Character not found."));
         characterRepository.delete(character);
     }
 
-
+    @Transactional
     public List<InventoryDTO> getInventoriesByCharacterId(Long characterId) {
         return inventoryRepository.findByCharacterId(characterId).stream()
                 .map(inventory -> new InventoryDTO(
@@ -142,6 +148,7 @@ public class CharacterService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public InventoryDTO createInventory(Long characterId, InventoryDTO inventoryDTO) {
         Inventory inventory = new Inventory();
         inventory.setName(inventoryDTO.getName());
@@ -159,6 +166,7 @@ public class CharacterService {
                 savedInventory.getCharacter().getId());
     }
 
+    @Transactional
     public InventoryDTO updateInventory(Long inventoryId, InventoryDTO inventoryDTO) {
         Inventory inventory = inventoryRepository.findById(inventoryId)
                 .orElseThrow(() -> new RuntimeException("Inventory not found."));
@@ -176,12 +184,14 @@ public class CharacterService {
                 updatedInventory.getCharacter().getId());
     }
 
+    @Transactional
     public void deleteInventory(Long inventoryId) {
         Inventory inventory = inventoryRepository.findById(inventoryId)
                 .orElseThrow(() -> new RuntimeException("Inventory not found."));
         inventoryRepository.delete(inventory);
     }
 
+    @Transactional
     public List<SkillDTO> getSkillsByCharacterId(Long characterId) {
         return skillRepository.findByCharacterId(characterId).stream()
                 .map(skill -> new SkillDTO(
@@ -193,6 +203,7 @@ public class CharacterService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public SkillDTO createSkill(Long characterId, SkillDTO skillDTO) {
         Skill skill = new Skill();
         skill.setName(skillDTO.getName());
@@ -208,6 +219,7 @@ public class CharacterService {
                 savedSkill.getCharacter().getId());
     }
 
+    @Transactional
     public SkillDTO updateSkill(Long skillId, SkillDTO skillDTO) {
         Skill skill = skillRepository.findById(skillId)
                 .orElseThrow(() -> new RuntimeException("Skill not found."));
@@ -223,6 +235,7 @@ public class CharacterService {
                 updatedSkill.getCharacter().getId());
     }
 
+    @Transactional
     public void deleteSkill(Long skillId) {
         Skill skill = skillRepository.findById(skillId)
                 .orElseThrow(() -> new RuntimeException("Skill not found."));
