@@ -8,7 +8,9 @@ import com.example.seshatrpgauxiliary.presentation.request.CharacterUpdateReques
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -26,20 +28,11 @@ public class CharacterController {
         return characterService.getCharactersByUserId(userId);
     }
 
-//    @GetMapping("/inventory/{userId}")
-//    public List<CharacterInventoryDTO> getCharactersInventoryByUserId(@PathVariable Long userId) {
-//        return characterService.getCharactersInventoryByUserId(userId);
-//    }
-//
-//    @GetMapping("/skills/{userId}")
-//    public List<CharacterSkillDTO> getCharactersSkillsByUserId (@PathVariable Long userId) {
-//        return characterService.getCharactersSkillsByUserId(userId);
-//    }
-
     @PostMapping("/create")
-    public ResponseEntity<CharacterDTO> createCharacter(@RequestBody CharacterCreationRequest request) {
-        CharacterDTO createdCharacter = characterService.createCharacter(request);
-        return new ResponseEntity<>(createdCharacter , HttpStatus.OK);
+    public ResponseEntity<CharacterDTO> createCharacter(@RequestPart("request") CharacterCreationRequest request,
+                                                        @RequestPart("image") MultipartFile image) throws IOException {
+        CharacterDTO createdCharacter = characterService.createCharacter(request, image);
+        return new ResponseEntity<>(createdCharacter, HttpStatus.OK);
     }
 
     @PutMapping("/update/{characterId}")

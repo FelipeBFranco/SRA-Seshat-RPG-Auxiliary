@@ -10,8 +10,11 @@ import com.example.seshatrpgauxiliary.presentation.request.CharacterCreationRequ
 import com.example.seshatrpgauxiliary.presentation.request.CharacterUpdateRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import java.util.stream.Collectors;
@@ -42,7 +45,6 @@ public class CharacterService {
     public List<CharacterDTO> getCharactersByUserId(Long userId) {
 
         List<Character> characters = characterRepository.findByUserId(userId);
-        System.out.println(userId);
         return characters.stream()
                 .map(character -> new CharacterDTO(
                         character.getId(),
@@ -59,29 +61,33 @@ public class CharacterService {
     }
 
     @Transactional
-    public CharacterDTO createCharacter(CharacterCreationRequest request) {
-        // Cria uma nova instância de Attributes com os dados do request
-        Attributes attributes = new Attributes(null, request.getLevel(), 0, // Supondo que experience comece do zero
-                request.getHealth(), request.getStamina(), 0, // Mana e Amalgama iniciam como 0 para simplificar
-                0, 0, // StaminaMax e AmalgamaMax não especificados no request
+    public CharacterDTO createCharacter(CharacterCreationRequest request, MultipartFile image) throws IOException {
+        // Convert MultipartFile to Base64
+        String base64Image = Base64.getEncoder().encodeToString(image.getBytes());
+
+        // Create a new instance of Attributes with the data from the request
+        Attributes attributes = new Attributes(null, request.getLevel(), 0, // Assuming experience starts from zero
+                request.getHealth(), request.getStamina(), 0, // Mana and Amalgama start as 0 for simplicity
+                0, 0, // StaminaMax and AmalgamaMax not specified in the request
                 request.getStrength(), request.getAgility(), request.getIntelligence(),
                 request.getMind(), request.getBlock(), request.getDodge(),
-                request.getDetermination(), request.getHealth(), // HealthMax igual ao Health inicial
-                0, // ManaMax não especificado no request
-                request.getStamina()); // StaminaMax igual ao Stamina inicial
-        // Salva os atributos no banco de dados
+                request.getDetermination(), request.getHealth(), // HealthMax equal to initial Health
+                0, // ManaMax not specified in the request
+                request.getStamina()); // StaminaMax equal to initial Stamina
+
+        // Save the attributes in the database
         attributes = attributesRepository.save(attributes);
 
-        // Cria uma nova instância de Character com os dados do request e os Attributes salvos
-        Character character = new Character(null, request.getName(), request.getImage(), attributes, new ArrayList<>(), // Inventory vazio inicialmente
-                new ArrayList<>(), // Skills vazio inicialmente
-                userRepository.findById(request.getUserId()).orElse(null), // Busca o User pelo ID
+        // Create a new instance of Character with the data from the request and the saved Attributes
+        Character character = new Character(null, request.getName(), base64Image, attributes, new ArrayList<>(), // Initially empty Inventory
+                new ArrayList<>(), // Initially empty Skills
+                userRepository.findById(request.getUserId()).orElse(null), // Find the User by ID
                 request.getRace(), request.getClassType(), request.getCampaign());
 
-        // Salva o personagem no banco de dados
+        // Save the character in the database
         character = characterRepository.save(character);
 
-        // Converte o Character salvo para DTO e retorna
+        // Convert the saved Character to DTO and return
         return new CharacterDTO(character.getId(), character.getName(), character.getImage(),
                 character.getAttributes(), character.getUser().getId(), character.getUser().getName(),
                 character.getRace(), character.getClassType(), character.getCampaign());

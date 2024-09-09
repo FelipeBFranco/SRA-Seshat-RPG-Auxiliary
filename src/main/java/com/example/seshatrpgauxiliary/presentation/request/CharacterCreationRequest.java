@@ -7,8 +7,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class CharacterCreationRequest {
 
         private Long userId;
@@ -18,6 +18,8 @@ public class CharacterCreationRequest {
         private Integer level;
         private Integer health;
         private Integer stamina;
+        private Integer amalgama;
+        private Integer mana;
         private Integer strength;
         private Integer agility;
         private Integer intelligence;
@@ -25,6 +27,10 @@ public class CharacterCreationRequest {
         private Integer block;
         private Integer dodge;
         private Integer determination;
-        private String image;
         private String campaign;
+        private Integer experience;
+        private Integer staminaMax;
+        private Integer healthMax;
+        private Integer amalgamaMax;
+        private Integer manaMax;
 }
