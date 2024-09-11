@@ -33,4 +33,5 @@ public class CharacterCreationRequest {
         private Integer healthMax;
         private Integer amalgamaMax;
         private Integer manaMax;
+        private String image;
 }
