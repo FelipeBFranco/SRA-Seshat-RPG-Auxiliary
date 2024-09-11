@@ -29,11 +29,11 @@ public class CharacterController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<CharacterDTO> createCharacter(@RequestPart("request") CharacterCreationRequest request,
-                                                        @RequestPart("image") MultipartFile image) throws IOException {
-        CharacterDTO createdCharacter = characterService.createCharacter(request, image);
-        return new ResponseEntity<>(createdCharacter, HttpStatus.OK);
+    public ResponseEntity<CharacterDTO> createCharacter(@RequestBody CharacterCreationRequest request) {
+        CharacterDTO createdCharacter = characterService.createCharacter(request);
+        return new ResponseEntity<>(createdCharacter , HttpStatus.OK);
     }
+
 
     @PutMapping("/update/{characterId}")
     public ResponseEntity<CharacterUpdateRequest> updateCharacter(@PathVariable Long characterId, @RequestBody CharacterUpdateRequest request) {
